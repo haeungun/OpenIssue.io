@@ -10,16 +10,16 @@
     <div id="menu">
         <img id="logo" src="../assets/logo2.png">
         <ul id="menu-list">
-            <router-link to="/main"> <li>issues</li></router-link>
-            <li v-on:click="showSearch($event)">search</li>
-            <router-link to="/main/sign"><li>{{ isAuthen? "logout" : "sign in" }}</li></router-link>
+            <router-link to="/main"> <li>Issues</li></router-link>
+            <li v-on:click="showSearch($event)">Search</li>
+            <router-link to="/main/sign"><li>{{ isAuthen? "Logout" : "Sign in" }}</li></router-link>
         </ul>
         <div id="menu-mobile">
             <div id="btn-drop" v-on:click="dropdown($event)"><img src="../assets/line-menu.png"/></div>
             <ul class="drop-list">
-                <li>{{ isAuth? "logout" : "sign in" }}</li>
-                <li>issues</li>
-                <li>search</li>
+                <li>{{ isAuth? "Logout" : "Sign in" }}</li>
+                <li>Issues</li>
+                <li>Search</li>
             </ul>
         </div>
         <div id="github">

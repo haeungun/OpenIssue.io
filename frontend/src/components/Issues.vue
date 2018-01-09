@@ -14,6 +14,7 @@
         </div>
     </div>
     <div v-else>
+        
         <div id="issue-list">
             <div class="issue" v-for="issue in issues"> 
                 <a v-bind:href="issue.url" class="issue-url">   
@@ -21,8 +22,8 @@
                         <img class="issue-pic" v-bind:src="issue.pic"/>
                         <div class="issue-info">
                             <p class="issue-repo">{{ issue.repo }}</p>
-                            <p class="issue-title">{{ issue.title }}</p>
-                            <p class="issue-body">{{ issue.body.length > 45 ? issue.body.substring(0, 42)+"..." : issue.body }}</p>
+                            <p class="issue-title">{{ windowWidth < 768 ? issue.title.substring(0, 25) + "..." : issue.title }}</p>
+                            <p class="issue-body">{{ windowWidth < 768 ? issue.body.substring(0, 42)+"..." : issue.body.substring(0, 120) + "..." }}</p>
                             
                         </div>
                         <div class="issue-labels"> 
@@ -59,13 +60,14 @@
 import rest from '../service/rest'
 
 let pageNum = 1
-let scrollListener = false
 let lock = false
+let resizeListener = false
+let scrollListener = false
 
 export default {
   methods: {
     getIssues: function () {
-        console.log(pageNum)
+      console.log(pageNum)
       if (!lock) {
         lock = true
         rest.getIssues(pageNum).then((data) => {
@@ -82,6 +84,9 @@ export default {
       if ((document.body.scrollHeight - window.innerHeight) < window.scrollY * 1.1) {
         this.getIssues()
       }
+    },
+    resizeHandler: function () {
+        this.windowWidth = window.innerWidth
     }
   },
   created () {
@@ -89,15 +94,21 @@ export default {
     window.scrollTo(0, 0)
   },
   mounted () {
+    lock = false
     this.getIssues()
     if (!scrollListener) {
       window.addEventListener('scroll', this.scrollHandler)
       scrollListener = true
     }
+    if (!resizeListener) {
+      window.addEventListener('resize', this.resizeHandler)
+      resizeListener = true
+    }
   },
   data () {
     return {
-      issues: []
+      issues: [],
+      windowWidth: window.innerWidth
     }
   }
 }
@@ -149,9 +160,12 @@ img.issue-pic {
     border-radius: 5px; 
     position: absolute;
 }
+p.issue-repo {
+    font-size: .9em;
+}
 p.issue-title {
     font-weight: bold;
-    font-size: 1.15em;
+    font-size: 1em;
 }
 p.issue-body {
     font-size: .8em;
@@ -184,7 +198,7 @@ span.issue-label {
         height: 120px;
     }
     div.issue-info {
-        width: 600px;
+        width: 580px;
     }
     img.issue-pic {
         width: 100px;
